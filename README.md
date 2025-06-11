@@ -123,7 +123,7 @@ Use GitHub Actions or GitLab CI to:
 Example GitHub Actions snippet:
 
 - name: Deploy to EKS
-  run: |
+  run:
     aws eks update-kubeconfig --region $AWS_REGION --name $EKS_CLUSTER
     kubectl apply -f deployment.yaml
 
