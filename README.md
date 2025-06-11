@@ -18,42 +18,31 @@ Secrets Management	Shared files (e.g., master.key)	Native (AWS Secrets Manager, 
 Monitoring/Logs	Manual (e.g., tail logs on server)	Integrated with CloudWatch, Prometheus, etc.	Use kubectl logs or local logging tools
 Usage	Simple, great for monoliths	Best for microservices, scalable platforms	Local-only, fast iteration cycles
 
-
-⸻
-
 🧭 Migrating from Capistrano to Kubernetes (EKS or KIND)
 
-✅ 1. Containerize Your Rails App
+# 1. Containerize Your Rails App
 
 You need to run your Rails app as a Docker container.
 
 Dockerfile:
 
 FROM ruby:3.2
-
-# Set environment
-ENV RAILS_ENV=production
-
-# Install dependencies
-RUN apt-get update -qq && apt-get install -y nodejs postgresql-client yarn
-
+ENV RAILS_ENV=production # Set environment
+RUN apt-get update -qq && apt-get install -y nodejs postgresql-client yarn # Install dependencies
 WORKDIR /app
-
 COPY . /app
-
 RUN bundle install --without development test
 RUN yarn install
 RUN bundle exec rake assets:precompile
-
 CMD ["bundle", "exec", "puma", "-C", "config/puma.rb"]
 
-✅ 2. Build & Push Docker Image
+# 2. Build & Push Docker Image
 
 docker build -t myapp .
 docker tag myapp <your-dockerhub-or-ecr-repo>/myapp:latest
 docker push <your-dockerhub-or-ecr-repo>/myapp:latest
 
-✅ 3. Set Up Kubernetes Manifests
+# 3. Set Up Kubernetes Manifests
 
 Deployment (deployment.yaml)
 
@@ -99,10 +88,7 @@ spec:
   - port: 80
     targetPort: 3000
 
-
-⸻
-
-✅ 4. Use KIND for Local Testing (Optional)
+# 4. Use KIND for Local Testing (Optional)
 
 kind create cluster --name rails-cluster
 kubectl apply -f deployment.yaml
@@ -111,9 +97,7 @@ kubectl port-forward svc/rails-service 8080:80
 
 Now visit http://localhost:8080 to test.
 
-⸻
-
-✅ 5. Deploy to AWS EKS
+# 5. Deploy to AWS EKS
 	1.	Create EKS Cluster via AWS Console or Terraform.
 	2.	Configure kubectl for EKS:
 
@@ -128,9 +112,8 @@ kubectl apply -f service.yaml
 
 	4.	Use AWS Secrets Manager or Kubernetes Secrets for your secrets.
 
-⸻
 
-✅ 6. CI/CD Setup
+# 6. CI/CD Setup
 
 Use GitHub Actions or GitLab CI to:
 	•	Build Docker image
@@ -144,8 +127,6 @@ Example GitHub Actions snippet:
     aws eks update-kubeconfig --region $AWS_REGION --name $EKS_CLUSTER
     kubectl apply -f deployment.yaml
 
-
-⸻
 
 🏁 Final Thoughts
 
