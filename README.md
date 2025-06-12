@@ -2,21 +2,21 @@ Deploying a Ruby on Rails application via Capistrano versus using DevOps tools l
 
 Below is a comparison and a migration guide from Capistrano (traditional server-based) to containerized environments like EKS or KIND.
 
-⸻
-
 🔍 Comparison: Capistrano vs AWS EKS vs KIND
 
-Feature/Aspect	Capistrano	AWS EKS (Kubernetes)	KIND (for local K8s)
-Deployment Style	SSH-based, pull from Git	Push Docker images, deploy via manifests/Helm	Push Docker images, deploy via kubectl
-Architecture	Single-node or manually provisioned	Clustered, auto-scaled, microservices	Simulated cluster inside Docker for local dev
-Environment	Bare metal / VM / VPS	Fully managed cloud-native infrastructure	Local environment for testing Kubernetes setups
-Scaling	Manual (vertical or horizontal)	Automatic (HPA, load balancer)	Not scalable (test only)
-Zero Downtime Deployment	Not default, requires tuning	Native with rolling updates	Manual but testable
-CI/CD Integration	Limited, manual scripts or triggers	Easily integrates with GitHub Actions, ArgoCD	Supports same tools as EKS (but for dev only)
-Rollback	Easy with cap rollback	Handled via kubectl rollout undo or Helm	Same as EKS (manual or scripted)
-Secrets Management	Shared files (e.g., master.key)	Native (AWS Secrets Manager, K8s Secrets)	Same as Kubernetes
-Monitoring/Logs	Manual (e.g., tail logs on server)	Integrated with CloudWatch, Prometheus, etc.	Use kubectl logs or local logging tools
-Usage	Simple, great for monoliths	Best for microservices, scalable platforms	Local-only, fast iteration cycles
+| Feature/Aspect               | **Capistrano**                      | **AWS EKS (Kubernetes)**                      | **KIND (for local K8s)**                        |
+| ---------------------------- | ----------------------------------- | --------------------------------------------- | ----------------------------------------------- |
+| **Deployment Style**         | SSH-based, pull from Git            | Push Docker images, deploy via manifests/Helm | Push Docker images, deploy via kubectl          |
+| **Architecture**             | Single-node or manually provisioned | Clustered, auto-scaled, microservices         | Simulated cluster inside Docker for local dev   |
+| **Environment**              | Bare metal / VM / VPS               | Fully managed cloud-native infrastructure     | Local environment for testing Kubernetes setups |
+| **Scaling**                  | Manual (vertical or horizontal)     | Automatic (HPA, load balancer)                | Not scalable (test only)                        |
+| **Zero Downtime Deployment** | Not default, requires tuning        | Native with rolling updates                   | Manual but testable                             |
+| **CI/CD Integration**        | Limited, manual scripts or triggers | Easily integrates with GitHub Actions, ArgoCD | Supports same tools as EKS (but for dev only)   |
+| **Rollback**                 | Easy with `cap rollback`            | Handled via `kubectl rollout undo` or Helm    | Same as EKS (manual or scripted)                |
+| **Secrets Management**       | Shared files (e.g., `master.key`)   | Native (AWS Secrets Manager, K8s Secrets)     | Same as Kubernetes                              |
+| **Monitoring/Logs**          | Manual (e.g., tail logs on server)  | Integrated with CloudWatch, Prometheus, etc.  | Use `kubectl logs` or local logging tools       |
+| **Usage**                    | Simple, great for monoliths         | Best for microservices, scalable platforms    | Local-only, fast iteration cycles               |
+
 
 🧭 Migrating from Capistrano to Kubernetes (EKS or KIND)
 
