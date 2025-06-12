@@ -46,6 +46,7 @@ docker push <your-dockerhub-or-ecr-repo>/myapp:latest
 
 Deployment (deployment.yaml)
 
+```bash
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -73,9 +74,11 @@ spec:
             secretKeyRef:
               name: rails-secrets
               key: database-url
+```
 
 Service (service.yaml)
 
+```bash
 apiVersion: v1
 kind: Service
 metadata:
@@ -87,28 +90,31 @@ spec:
   ports:
   - port: 80
     targetPort: 3000
+```
 
 # 4. Use KIND for Local Testing (Optional)
 
+```bash
 kind create cluster --name rails-cluster
 kubectl apply -f deployment.yaml
 kubectl apply -f service.yaml
 kubectl port-forward svc/rails-service 8080:80
+```
 
 Now visit http://localhost:8080 to test.
 
 # 5. Deploy to AWS EKS
 	1.	Create EKS Cluster via AWS Console or Terraform.
 	2.	Configure kubectl for EKS:
-
+```bash
 aws eks update-kubeconfig --region <region> --name <cluster-name>
-
+```
 
 	3.	Apply Manifests:
-
+```bash
 kubectl apply -f deployment.yaml
 kubectl apply -f service.yaml
-
+```
 
 	4.	Use AWS Secrets Manager or Kubernetes Secrets for your secrets.
 
@@ -122,11 +128,12 @@ Use GitHub Actions or GitLab CI to:
 
 Example GitHub Actions snippet:
 
+```bash
 - name: Deploy to EKS
   run:
     aws eks update-kubeconfig --region $AWS_REGION --name $EKS_CLUSTER
     kubectl apply -f deployment.yaml
-
+```
 
 🏁 Final Thoughts
 
