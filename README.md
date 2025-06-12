@@ -26,6 +26,7 @@ You need to run your Rails app as a Docker container.
 
 Dockerfile:
 
+```bash
 FROM ruby:3.2
 ENV RAILS_ENV=production # Set environment
 RUN apt-get update -qq && apt-get install -y nodejs postgresql-client yarn # Install dependencies
@@ -35,6 +36,7 @@ RUN bundle install --without development test
 RUN yarn install
 RUN bundle exec rake assets:precompile
 CMD ["bundle", "exec", "puma", "-C", "config/puma.rb"]
+```
 
 # 2. Build & Push Docker Image
 
