@@ -150,29 +150,29 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: 📦 Checkout Code
+    - name: Checkout Code
       uses: actions/checkout@v4
 
-    - name: 🔐 Configure AWS Credentials
+    - name: Configure AWS Credentials
       uses: aws-actions/configure-aws-credentials@v4
       with:
         aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
         aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         aws-region: ${{ secrets.AWS_REGION }}
 
-    - name: 🔑 Login to Amazon ECR
+    - name: Login to Amazon ECR
       id: login-ecr
       uses: aws-actions/amazon-ecr-login@v2
 
-    - name: 🐳 Build Docker Image
+    - name:  Build Docker Image
       run: |
         docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
 
-    - name: 🚀 Push Docker Image to ECR
+    - name: Push Docker Image to ECR
       run: |
         docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
 
-    - name: 📡 Update Kubeconfig
+    - name: Update Kubeconfig
       run: |
         aws eks update-kubeconfig --region $AWS_REGION --name $EKS_CLUSTER_NAME
 
@@ -182,7 +182,7 @@ jobs:
         kubectl apply -f k8s/service.yaml
         kubectl apply -f k8s/secrets.yaml
 
-    - name: 🔄 Run DB Migrations via Kubernetes Job
+    - name: Run DB Migrations via Kubernetes Job
       run: |
         # Define a unique job name to avoid conflict
         MIGRATION_JOB_NAME=rails-db-migrate-${{ github.run_id }}
@@ -196,7 +196,7 @@ jobs:
         # Delete the Job after completion
         kubectl delete job $MIGRATION_JOB_NAME
 
-    - name: 🚢 Deploy Latest Image to EKS
+    - name: Deploy Latest Image to EKS
       run: |
         kubectl set image deployment/rails-app rails=$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
         kubectl rollout status deployment/rails-app
@@ -205,7 +205,7 @@ jobs:
 
 🏁 Final Thoughts
 
-Migration Summary
+# Migration Summary
 Capistrano is fast and great for legacy Rails apps and monoliths.
 Kubernetes (EKS) is ideal for scalable, containerized Rails apps in microservice or cloud-native setups.
 KIND is for local testing only — don’t use it in production.
